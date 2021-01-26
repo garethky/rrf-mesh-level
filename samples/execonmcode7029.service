@@ -1,0 +1,31 @@
+# Exec On MCode Service Configuration
+#
+# Requires `execonmcode`: https://github.com/wilriker/execonmcode
+#
+# To install this service:
+# sudo cp execonmcode.service /etc/systemd/system/execonmcode.service
+#
+# To start and stop:
+# sudo systemctl start execonmcode.service
+# sudo systemctl stop execonmcode.service
+#
+# To enable automatic start on startup:
+# sudo systemctl enable execonmcode.service
+#
+# To view the service log for errors:
+# journalctl -u execonmcode.service
+#
+
+[Unit]
+Description=Exec M7029 with execonmcode
+After=duetcontrolserver.service
+Requires=duetcontrolserver.service
+
+[Service]
+ExecStart=/usr/local/bin/execonmcode -mCode 7029 -command "/usr/bin/python3 /opt/dsf/sd/sys/scripts/mesh-level.py -dsf -X %%X -Y %%Y "
+WorkingDirectory=/opt/dsf/sd/
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
